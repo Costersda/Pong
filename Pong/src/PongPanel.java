@@ -17,6 +17,10 @@ import java.awt.BasicStroke;
 	 
 	 private final static int TIMER_DELAY = 5;
 	 
+	 boolean gameInitialised = false;
+	 
+	 Ball ball;
+	 
 	 public PongPanel() {
 		 setBackground(BACKGROUND_COLOR);
 		 
@@ -39,6 +43,9 @@ import java.awt.BasicStroke;
 	  public void paintComponent(Graphics g) {
 	      super.paintComponent(g);
 	      paintDottedLine(g);
+	      if(gameInitialised) {
+	          paintSprite(g, ball);
+	      }
 	  }
 
 	@Override
@@ -66,8 +73,24 @@ import java.awt.BasicStroke;
 		
 	}
 	
-	public void update(){
-		
-	}
 
+	
+	public void createObjects(){
+		ball = new Ball(getWidth(), getHeight());
+	}
+	
+	public void update(){
+		if(!gameInitialised) {
+             createObjects();
+			 gameInitialised = true;
+		}
+	}
+		
+		private void paintSprite(Graphics g, Sprite sprite) {
+		     g.setColor(sprite.getColour());
+		     g.fillRect(sprite.getxPosition(), sprite.getyPosition(), sprite.getWidth(), sprite.getHeight());
+		}
+	
+	
 }
+
