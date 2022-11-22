@@ -13,13 +13,12 @@ import java.awt.BasicStroke;
 
  public class PongPanel extends JPanel implements ActionListener, KeyListener {
 	 
-	 private final static Color BACKGROUND_COLOR = Color.BLACK;
-	 
-	 private final static int TIMER_DELAY = 5;
-	 
-	 boolean gameInitialised = false;
-	 
+	 private final static Color BACKGROUND_COLOR = Color.BLACK;	 
+	 private final static int TIMER_DELAY = 5;	  
 	 Ball ball;
+	 GameState gameState = GameState.INITIALISING;
+	 Paddle paddle1;
+	 Paddle paddle2;
 	 
 	 public PongPanel() {
 		 setBackground(BACKGROUND_COLOR);
@@ -40,13 +39,16 @@ import java.awt.BasicStroke;
 		  }
 	 
 	 @Override
-	  public void paintComponent(Graphics g) {
-	      super.paintComponent(g);
-	      paintDottedLine(g);
-	      if(gameInitialised) {
-	          paintSprite(g, ball);
-	      }
-	  }
+     public void paintComponent(Graphics g) {
+         super.paintComponent(g);
+         paintDottedLine(g);
+         if(gameState != GameState.INITIALISING) {
+             paintSprite(g, ball);
+             paintSprite(g, paddle1);
+             paintSprite(g, paddle2);
+ 
+         }
+     }
 
 	@Override
 	public void keyTyped(KeyEvent event) {
@@ -77,14 +79,25 @@ import java.awt.BasicStroke;
 	
 	public void createObjects(){
 		ball = new Ball(getWidth(), getHeight());
+		paddle1 = new Paddle(Player.One, getWidth(), getHeight());
+        paddle2 = new Paddle(Player.Two, getWidth(), getHeight());
 	}
 	
-	public void update(){
-		if(!gameInitialised) {
-             createObjects();
-			 gameInitialised = true;
-		}
-	}
+	private void update() {
+		           switch(gameState) {
+		               case INITIALISING: {
+		                   createObjects();
+		                  gameState = GameState.PLAYING;
+		                   break;
+		               }
+		               case PLAYING: {
+		                   break;
+		             }
+		             case GAMEOVER: {
+		                 break;
+		             }
+		         }
+		     }
 		
 		private void paintSprite(Graphics g, Sprite sprite) {
 		     g.setColor(sprite.getColour());
